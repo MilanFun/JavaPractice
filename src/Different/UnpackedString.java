@@ -1,124 +1,50 @@
 package Different;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class UnpackedString {
   public static void main(String[] args) {
-
+    UnpackedString check1 = new UnpackedString("2[3[xy]]z");
+    System.out.println(check1.newString());
   }
 
-  String text;
+  private String text;
 
   public UnpackedString(String text) {
     this.text = text;
   }
 
-  public static void compute(String text) {
-    String res = "";
-
-    Pattern pattern = Pattern.compile("[^(^a-z && \\[ && \\])]");
-    Matcher matcher = pattern.matcher(text);
-    while(matcher.find()) {
-
-    }
-
-    System.out.println(res);
-  }
-
   public String newString() {
-    String res = "";
-    ArrayList<Integer> tmpOfInt = new ArrayList<>();
-
-    Pattern pattern = Pattern.compile("\\d+");
-    Matcher matcher = pattern.matcher(this.text);
-    int start = 0;
-    while (matcher.find(start)) {
-      String value = this.text.substring(matcher.start(), matcher.end());
-      Integer result = Integer.parseInt(value);
-      System.out.println(result);
-      tmpOfInt.add(result);
-      start = matcher.end();
-    }
-
-    ArrayList<String> tmpOfString = new ArrayList<>();
-    String[] massiveOfString = this.text.split("[^a-z && \\[ && \\]]");
-    for(int i = 0; i < massiveOfString.length; i++) {
-      if (massiveOfString[i].equals("")) {
-        continue;
-      } else {
-        tmpOfString.add(massiveOfString[i]);
-      }
-    }
-
-    Map<Integer, String> alfa = new LinkedHashMap<>();
-    for(int i = 0; i < tmpOfString.size(); i++) {
-      alfa.put(tmpOfInt.get(i), tmpOfString.get(i));
-    }
-
-    for(Map.Entry<Integer, String> item : alfa.entrySet()) {
-      for(int i = 0; i < item.getKey(); i++) {
-        res += item.getValue();
-      }
-    }
-
-    return res;
-  }
-
-  public String unpack() {
-    String res = "";
-    String[] arrayOfElement = this.text.split("");
+    StringBuilder res = new StringBuilder();
     int q = 0;
-//    System.out.println(Arrays.toString(arrayOfElement));
-    for(int i = 0; i < arrayOfElement.length; i++) {
-      Scanner scanner = new Scanner(arrayOfElement[i]);
-      ArrayList<String> y = new ArrayList<>();
+    ArrayList<Integer> mass = new ArrayList<>();
+    ArrayList<Integer> mass1 = new ArrayList<>();
+    String[] arrayText = this.text.split("\\[|\\]");
 
+    for(int i = 0; i < arrayText.length; i++) {
+      Scanner scanner = new Scanner(arrayText[i]);
       if(scanner.hasNextInt()) {
-        q = scanner.nextInt();
-        continue;
-      }
+        mass.add(scanner.nextInt());
+      } else {
 
-      if(arrayOfElement[i].equals("[")) {
-        int index = i;
-        String tmpIf = "";
-        for(int j = i + 1; j < arrayOfElement.length; j++) {
-          if(!arrayOfElement[j].equals("]")) {
-            index = j;
-          }
+        for(int f = 0; f < mass.size(); f++) {
+          mass1.add(mass.get(mass.size() - 1 - f));
         }
 
-        for(int k = i + 1; k <= index; k++) {
-          tmpIf += arrayOfElement[k];
+        int count = mass1.get(q);
+
+        for (int j = 0; j < count; j++) {
+          res.append(arrayText[i]);
         }
 
-        System.out.println();
-
-        y.add(tmpIf);
-        System.out.println(Arrays.toString(y.toArray()));
+        mass1.remove(q);
       }
 
-      if(q != 0) {
-        for(int j = 0; j < q; j++) {
-          res += Arrays.toString(y.toArray());
-        }
-      }
     }
-
-    return res;
+    System.out.println(mass1.toString());
+    return res.toString();
   }
 }
 
-class Solution {
-  public int strStr(String haystack, String needle) {
-    if(haystack == "" || needle == "") {
-      return 0;
-    }
-    if(haystack.contains(needle)) {
-      return haystack.indexOf(needle);
-    } else {
-      return -1;
-    }
-  }
-}
+
+
